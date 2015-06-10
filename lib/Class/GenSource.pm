@@ -102,5 +102,25 @@ Will print something like:
  sub bar {}
  sub baz {}
 
+Another example (generating L<Moo>-based class):
+
+ say gen_class_source_code(
+     name => 'My::Class',
+     attributes => {
+         foo => {},
+         bar => {},
+         baz => {},
+     },
+     variant => 'Moo',
+ );
+
+will print something like:
+
+ package My::Class;
+ use Moo;
+ has foo => (is=>'rw');
+ has bar => (is=>'rw');
+ has baz => (is=>'rw');
+
 
 =head1 DESCRIPTION
