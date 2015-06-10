@@ -17,7 +17,7 @@ my $re_ident = qr/\A[A-Za-z_][A-Za-z0-9_]*(::[A-Za-z_][A-Za-z0-9_]*)*\z/;
 
 $SPEC{gen_class_source_code} = {
     v => 1.1,
-    summary => 'Generate Perl source code to defined a class',
+    summary => 'Generate Perl source code to declare a class',
     description => <<'_',
 
 _
