@@ -1,5 +1,10 @@
 Revision history for Class-GenSource
 
+0.04    2015-06-12 (PERLANCAR)
+
+	- classic: Add write support for attributes.
+
+
 0.03    2015-06-10 (PERLANCAR)
 
 	- [Bugfix] Fix classic attribute, d'oh.
