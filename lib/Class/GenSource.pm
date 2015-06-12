@@ -7,6 +7,16 @@ use 5.010001;
 use strict;
 use warnings;
 
+use Data::Dump;
+
+sub _dump {
+    local $Data::Dump::Sortkeys = 1;
+    local $Data::Dump::Indent = 0;
+    local $Data::Dump::Terse = 1;
+    local $Data::Dump::Deparse = 1;
+    Dumper($_[0]);
+}
+
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(gen_class_source_code);
