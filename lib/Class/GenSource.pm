@@ -40,7 +40,7 @@ _
             schema  => ['str*', match=>$re_ident],
         },
         attributes => {
-            schema  => ['hash*', match=>$re_ident],
+            schema  => ['hash*', each_key=>['str*', match=>$re_ident]],
             default => {},
         },
         variant => {
