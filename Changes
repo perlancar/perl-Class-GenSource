@@ -1,8 +1,19 @@
 Revision history for Class-GenSource
 
+0.05    2015-06-12 (PERLANCAR)
+
+        - Add support for Mojo::Base [GH#1].
+
+	- Add support for Mouse.
+
+	- Add more tests.
+
+
 0.04    2015-06-12 (PERLANCAR)
 
 	- classic: Add write support for attributes.
+
+        - Add basic tests.
 
 
 0.03    2015-06-10 (PERLANCAR)
