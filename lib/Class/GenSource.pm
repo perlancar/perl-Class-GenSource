@@ -70,7 +70,7 @@ sub gen_class_source_code {
         if ($variant =~ /^Mo/) {
             push @res, "has $name => (is=>'rw');\n";
         } else {
-            push @res, "sub $name { \$_[0]{'$name'} }\n";
+            push @res, "sub $name { my \$self = shift; \$self->{'$name'} = \$_[0] if \@_; \$self->{'$name'} }\n";
         }
     }
 
@@ -98,9 +98,9 @@ Will print something like:
  package My::Class;
 
  sub new { my $class = shift; bless {@_}, $class }
- sub foo { $_[0]{foo} }
- sub bar { $_[0]{bar} }
- sub baz { $_[0]{baz} }
+ sub foo { my $self = shift; $self->{foo} = $_[0] if @_; $self->{foo} }
+ sub bar { my $self = shift; $self->{bar} = $_[0] if @_; $self->{bar}  }
+ sub baz { my $self = shift; $self->{baz} = $_[0] if @_; $self->{baz}  }
 
 Another example (generating L<Moo>-based class):
 
