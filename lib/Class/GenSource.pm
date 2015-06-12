@@ -34,7 +34,7 @@ _
             default => {},
         },
         variant => {
-            schema => ['str*', in=>[qw/classic Mo Moo Moose Mojo::Base/]],
+            schema => ['str*', in=>[qw/classic Mo Moo Moose Mouse Mojo::Base/]],
             default => 'classic',
         },
     },
@@ -52,12 +52,12 @@ sub gen_class_source_code {
     if ($variant eq 'Mojo::Base') {
         push @res, "use $variant ",
             ($args{parent} ? "'$args{parent}'" : "-base"), ";\n";
-    } if ($variant =~ /^(Mo|Moo|Moose)$/) {
+    } if ($variant =~ /^(Mo|Moo|Moose|Mouse)$/) {
         push @res, "use $variant;\n";
     }
 
     if ($args{parent}) {
-        if ($variant =~ /^(Mo|Moo|Moose)$/) {
+        if ($variant =~ /^(Mo|Moo|Moose|Mouse)$/) {
             push @res, "extends '$args{parent}';\n";
         } elsif ($variant eq 'classic') {
             push @res, "use parent qw(", $args{parent}, ");\n";
@@ -72,7 +72,7 @@ sub gen_class_source_code {
     for my $name (sort keys %$attrs) {
         if ($variant =~ /^(Mojo::Base)$/) {
             push @res, "has '$name';\n";
-        } elsif ($variant =~ /^(Mo|Moo|Moose)$/) {
+        } elsif ($variant =~ /^(Mo|Moo|Moose|Mouse)$/) {
             push @res, "has $name => (is=>'rw');\n";
         } else {
             push @res, "sub $name { my \$self = shift; \$self->{'$name'} = \$_[0] if \@_; \$self->{'$name'} }\n";

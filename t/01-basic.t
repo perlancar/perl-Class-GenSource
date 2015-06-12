@@ -75,6 +75,29 @@ subtest 'Moo' => sub {
     # XXX test subclass instance
 };
 
+subtest 'Mouse' => sub {
+    plan skip_all => 'Mouse not available'
+        unless module_path(module => 'Mouse');
+
+    my $src = gen_class_source_code(
+        name => 'Foo::Mouse', variant => 'Mouse',
+        attributes => {bar=>{}, baz=>{}});
+
+    eval $src;
+    ok(!$@, "compile succeeds") or diag explain {code=>$src, error=>$@};
+
+    my $obj = Foo::Mouse->new(bar=>2, baz=>3);
+    is($obj->bar, 2);
+    is($obj->baz, 3);
+    $obj->bar(4);
+    is($obj->bar, 4);
+    is($obj->baz(5), 5);
+
+    dies_ok { $obj->qux } "access unknown attribute -> dies";
+
+    # XXX test subclass instance
+};
+
 subtest 'Moose' => sub {
     plan skip_all => 'Moose not available'
         unless module_path(module => 'Moose');
