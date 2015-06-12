@@ -10,9 +10,16 @@ use Test::More 0.98;
 
 use Class::GenSource qw(gen_class_source_code);
 
+my %spec1 = (
+    attributes => {
+        bar=>{},
+        baz=>{default=>-1},
+        qux=>{default=>-2},
+    },
+);
+
 subtest classic => sub {
-    my $src = gen_class_source_code(
-        name => 'Foo', attributes => {bar=>{}, baz=>{}});
+    my $src = gen_class_source_code(name => 'Foo', %spec1);
 
     eval $src;
     ok(!$@, "compile succeeds") or diag explain {code=>$src, error=>$@};
@@ -20,11 +27,12 @@ subtest classic => sub {
     my $obj = Foo->new(bar=>2, baz=>3);
     is($obj->bar, 2);
     is($obj->baz, 3);
+    is($obj->qux, -2);
     $obj->bar(4);
     is($obj->bar, 4);
     is($obj->baz(5), 5);
 
-    dies_ok { $obj->qux } "access unknown attribute -> dies";
+    dies_ok { $obj->thud } "access unknown attribute -> dies";
 
     # XXX test subclass instance
 };
@@ -34,8 +42,7 @@ subtest 'Mo' => sub {
         unless module_path(module => 'Mo');
 
     my $src = gen_class_source_code(
-        name => 'Foo::Mo', variant => 'Mo',
-        attributes => {bar=>{}, baz=>{}});
+        name => 'Foo::Mo', variant => 'Mo', %spec1);
 
     eval $src;
     ok(!$@, "compile succeeds") or diag explain {code=>$src, error=>$@};
@@ -43,11 +50,12 @@ subtest 'Mo' => sub {
     my $obj = Foo::Mo->new(bar=>2, baz=>3);
     is($obj->bar, 2);
     is($obj->baz, 3);
+    is($obj->qux, -2);
     $obj->bar(4);
     is($obj->bar, 4);
     is($obj->baz(5), 5);
 
-    dies_ok { $obj->qux } "access unknown attribute -> dies";
+    dies_ok { $obj->thud } "access unknown attribute -> dies";
 
     # XXX test subclass instance
 };
@@ -57,8 +65,7 @@ subtest 'Moo' => sub {
         unless module_path(module => 'Moo');
 
     my $src = gen_class_source_code(
-        name => 'Foo::Moo', variant => 'Moo',
-        attributes => {bar=>{}, baz=>{}});
+        name => 'Foo::Moo', variant => 'Moo', %spec1);
 
     eval $src;
     ok(!$@, "compile succeeds") or diag explain {code=>$src, error=>$@};
@@ -66,11 +73,12 @@ subtest 'Moo' => sub {
     my $obj = Foo::Moo->new(bar=>2, baz=>3);
     is($obj->bar, 2);
     is($obj->baz, 3);
+    is($obj->qux, -2);
     $obj->bar(4);
     is($obj->bar, 4);
     is($obj->baz(5), 5);
 
-    dies_ok { $obj->qux } "access unknown attribute -> dies";
+    dies_ok { $obj->thud } "access unknown attribute -> dies";
 
     # XXX test subclass instance
 };
@@ -80,8 +88,7 @@ subtest 'Mouse' => sub {
         unless module_path(module => 'Mouse');
 
     my $src = gen_class_source_code(
-        name => 'Foo::Mouse', variant => 'Mouse',
-        attributes => {bar=>{}, baz=>{}});
+        name => 'Foo::Mouse', variant => 'Mouse', %spec1);
 
     eval $src;
     ok(!$@, "compile succeeds") or diag explain {code=>$src, error=>$@};
@@ -89,11 +96,12 @@ subtest 'Mouse' => sub {
     my $obj = Foo::Mouse->new(bar=>2, baz=>3);
     is($obj->bar, 2);
     is($obj->baz, 3);
+    is($obj->qux, -2);
     $obj->bar(4);
     is($obj->bar, 4);
     is($obj->baz(5), 5);
 
-    dies_ok { $obj->qux } "access unknown attribute -> dies";
+    dies_ok { $obj->thud } "access unknown attribute -> dies";
 
     # XXX test subclass instance
 };
@@ -103,8 +111,7 @@ subtest 'Moose' => sub {
         unless module_path(module => 'Moose');
 
     my $src = gen_class_source_code(
-        name => 'Foo::Moose', variant => 'Moose',
-        attributes => {bar=>{}, baz=>{}});
+        name => 'Foo::Moose', variant => 'Moose', %spec1);
 
     eval $src;
     ok(!$@, "compile succeeds") or diag explain {code=>$src, error=>$@};
@@ -112,11 +119,12 @@ subtest 'Moose' => sub {
     my $obj = Foo::Moose->new(bar=>2, baz=>3);
     is($obj->bar, 2);
     is($obj->baz, 3);
+    is($obj->qux, -2);
     $obj->bar(4);
     is($obj->bar, 4);
     is($obj->baz(5), 5);
 
-    dies_ok { $obj->qux } "access unknown attribute -> dies";
+    dies_ok { $obj->thud } "access unknown attribute -> dies";
 
     # XXX test subclass instance
 };
@@ -126,8 +134,7 @@ subtest 'Mojo::Base' => sub {
         unless module_path(module => 'Mojo::Base');
 
     my $src = gen_class_source_code(
-        name => 'Foo::Mojo', variant => 'Mojo::Base',
-        attributes => {bar=>{}, baz=>{}});
+        name => 'Foo::Mojo', variant => 'Mojo::Base', %spec1);
 
     eval $src;
     ok(!$@, "compile succeeds") or diag explain {code=>$src, error=>$@};
@@ -135,11 +142,12 @@ subtest 'Mojo::Base' => sub {
     my $obj = Foo::Mojo->new(bar=>2, baz=>3);
     is($obj->bar, 2);
     is($obj->baz, 3);
+    is($obj->qux, -2);
     $obj->bar(4);
     is($obj->bar, 4);
     #is($obj->baz(5), 5); # in Mojo::Base, setting returns the object
 
-    dies_ok { $obj->qux } "access unknown attribute -> dies";
+    dies_ok { $obj->thud } "access unknown attribute -> dies";
 
     # XXX test subclass instance
 };

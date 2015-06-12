@@ -7,15 +7,15 @@ use 5.010001;
 use strict;
 use warnings;
 
-#use Data::Dumper;
-#
-#sub _dump {
-#    local $Data::Dumper::Sortkeys = 1;
-#    local $Data::Dumper::Indent = 0;
-#    local $Data::Dumper::Terse = 1;
-#    local $Data::Dumper::Deparse = 1;
-#    Dumper($_[0]);
-#}
+use Data::Dumper;
+
+sub _dump {
+    local $Data::Dumper::Sortkeys = 1;
+    local $Data::Dumper::Indent = 0;
+    local $Data::Dumper::Terse = 1;
+    local $Data::Dumper::Deparse = 1;
+    Dumper($_[0]);
+}
 
 require Exporter;
 our @ISA = qw(Exporter);
@@ -55,6 +55,7 @@ sub gen_class_source_code {
 
     # XXX schema
     my $variant = $args{variant} // 'classic';
+    my $attrs = $args{attributes} // {};
 
     my @res;
 
@@ -62,7 +63,9 @@ sub gen_class_source_code {
     if ($variant eq 'Mojo::Base') {
         push @res, "use $variant ",
             ($args{parent} ? "'$args{parent}'" : "-base"), ";\n";
-    } if ($variant =~ /^(Mo|Moo|Moose|Mouse)$/) {
+    } if ($variant eq 'Mo') {
+        push @res, "use Mo qw(default);\n";
+    } elsif ($variant =~ /^(Moo|Moose|Mouse)$/) {
         push @res, "use $variant;\n";
     }
 
@@ -75,15 +78,31 @@ sub gen_class_source_code {
     }
 
     if ($variant eq 'classic') {
-        push @res, q[sub new { my $class = shift; bless {@_}, $class; }], "\n";
+        push @res, q[sub new { my $class = shift; my $self = bless {@_}, $class];
+        for my $name (sort keys %$attrs) {
+            my $spec = $attrs->{$name};
+            if (exists $spec->{default}) {
+                push @res, "; \$self->{'$name'} = ", _dump($spec->{default}),
+                    " unless exists \$self->{'$name'}";
+            }
+        }
+        push @res, q[; $self }], "\n";
     }
 
-    my $attrs = $args{attributes} // {};
     for my $name (sort keys %$attrs) {
+        my $spec = $attrs->{$name};
         if ($variant =~ /^(Mojo::Base)$/) {
-            push @res, "has '$name';\n";
+            push @res, (
+                "has '$name'",
+                (exists($spec->{default}) ? " => "._dump($spec->{default}) : ''),
+                 ";\n",
+             );
         } elsif ($variant =~ /^(Mo|Moo|Moose|Mouse)$/) {
-            push @res, "has $name => (is=>'rw');\n";
+            push @res, (
+                "has $name => (is=>'rw'",
+                (exists($spec->{default}) ? ", default=>"._dump($spec->{default}) : ''),
+                ");\n",
+            );
         } else {
             push @res, "sub $name { my \$self = shift; \$self->{'$name'} = \$_[0] if \@_; \$self->{'$name'} }\n";
         }
@@ -103,7 +122,7 @@ sub gen_class_source_code {
      name => 'My::Class',
      attributes => {
          foo => {},
-         bar => {},
+         bar => {default=>3},
          baz => {},
      },
  );
@@ -112,7 +131,12 @@ Will print something like:
 
  package My::Class;
 
- sub new { my $class = shift; bless {@_}, $class }
+ sub new {
+     my $class = shift;
+     my $self = bless {@_}, $class;
+     $self->{bar} = 3 unless exists $self->{bar};
+     $self;
+ }
  sub foo { my $self = shift; $self->{foo} = $_[0] if @_; $self->{foo} }
  sub bar { my $self = shift; $self->{bar} = $_[0] if @_; $self->{bar}  }
  sub baz { my $self = shift; $self->{baz} = $_[0] if @_; $self->{baz}  }
@@ -123,7 +147,7 @@ Another example (generating L<Moo>-based class):
      name => 'My::Class',
      attributes => {
          foo => {},
-         bar => {},
+         bar => {default=>3},
          baz => {},
      },
      variant => 'Moo',
@@ -134,7 +158,7 @@ will print something like:
  package My::Class;
  use Moo;
  has foo => (is=>'rw');
- has bar => (is=>'rw');
+ has bar => (is=>'rw', default=>3);
  has baz => (is=>'rw');
 
 
