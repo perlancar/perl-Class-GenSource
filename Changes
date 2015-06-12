@@ -1,5 +1,10 @@
 Revision history for Class-GenSource
 
+0.06    2015-06-12 (PERLANCAR)
+
+	- Add support for default value.
+
+
 0.05    2015-06-12 (PERLANCAR)
 
         - Add support for Mojo::Base [GH#1].
