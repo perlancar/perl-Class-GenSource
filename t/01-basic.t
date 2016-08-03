@@ -4,7 +4,7 @@ use 5.010;
 use strict;
 use warnings;
 
-use Module::Path::More qw(module_path);
+use Test::Needs;
 use Test::Exception;
 use Test::More 0.98;
 
@@ -38,8 +38,7 @@ subtest classic => sub {
 };
 
 subtest 'Mo' => sub {
-    plan skip_all => 'Mo not available'
-        unless module_path(module => 'Mo');
+    test_needs 'Mo';
 
     my $src = gen_class_source_code(
         name => 'Foo::Mo', variant => 'Mo', %spec1);
@@ -61,8 +60,7 @@ subtest 'Mo' => sub {
 };
 
 subtest 'Moo' => sub {
-    plan skip_all => 'Moo not available'
-        unless module_path(module => 'Moo');
+    test_needs 'Moo';
 
     my $src = gen_class_source_code(
         name => 'Foo::Moo', variant => 'Moo', %spec1);
@@ -84,8 +82,7 @@ subtest 'Moo' => sub {
 };
 
 subtest 'Mouse' => sub {
-    plan skip_all => 'Mouse not available'
-        unless module_path(module => 'Mouse');
+    test_needs 'Mouse';
 
     my $src = gen_class_source_code(
         name => 'Foo::Mouse', variant => 'Mouse', %spec1);
@@ -107,8 +104,7 @@ subtest 'Mouse' => sub {
 };
 
 subtest 'Moose' => sub {
-    plan skip_all => 'Moose not available'
-        unless module_path(module => 'Moose');
+    test_needs 'Moose';
 
     my $src = gen_class_source_code(
         name => 'Foo::Moose', variant => 'Moose', %spec1);
@@ -130,8 +126,7 @@ subtest 'Moose' => sub {
 };
 
 subtest 'Mojo::Base' => sub {
-    plan skip_all => 'Mojo::Base not available'
-        unless module_path(module => 'Mojo::Base');
+    test_needs 'Mojo::Base';
 
     my $src = gen_class_source_code(
         name => 'Foo::Mojo', variant => 'Mojo::Base', %spec1);
