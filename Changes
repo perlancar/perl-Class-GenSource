@@ -1,9 +1,9 @@
-0.06    2015-06-12 (PERLANCAR)
+0.06    2015-06-12  Released-By: PERLANCAR
 
 	- Add support for default value.
 
 
-0.05    2015-06-12 (PERLANCAR)
+0.05    2015-06-12  Released-By: PERLANCAR
 
         - Add support for Mojo::Base [GH#1].
 
@@ -12,25 +12,25 @@
 	- Add more tests.
 
 
-0.04    2015-06-12 (PERLANCAR)
+0.04    2015-06-12  Released-By: PERLANCAR
 
 	- classic: Add write support for attributes.
 
         - Add basic tests.
 
 
-0.03    2015-06-10 (PERLANCAR)
+0.03    2015-06-10  Released-By: PERLANCAR
 
 	- [Bugfix] Fix classic attribute, d'oh.
 
 
-0.02    2015-06-10 (PERLANCAR)
+0.02    2015-06-10  Released-By: PERLANCAR
 
         - No functional changes.
 
         - Tweak doc.
 
 
-0.01    2015-06-10 (PERLANCAR)
+0.01    2015-06-10  Released-By: PERLANCAR
 
         - First release, no tests yet.
